@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "skypro-beta-course-paper"
+version = "0.1.0"
+description = ""
+authors = ["Denis Khudyakov <denis.hudyakov27@gamil.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

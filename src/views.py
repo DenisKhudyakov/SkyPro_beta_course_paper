@@ -20,14 +20,18 @@ def read_xls_file(any_path: Path) -> dict:
     for i in operation_data.iterrows():
         yield i[1].to_dict()
 
-# print(next(read_xls_file(PATH_XLS_FILE_WITH_OPERATION)))
 
 
 def get_api():
     response = requests.get('https://ru.tradingview.com/symbols/SPX/components/')
     text = re.findall(r'"response_json":.+</script></div>', response.text)[0][:-15]
-    # response = requests.get('https://openexchangerates.org/api/latest.json?app_id='+API_KEY)
-    # return response.json()
-    return text
+    print(response.text)
+    new_text = re.findall(r'\{(?:.*?)\}\]\}', text)
+    return json.loads(*new_text)
 
-print(get_api())
+def filter_stock_data(_dict: dict) -> list:
+    stock_exchange_shares = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
+    return list(filter(lambda x: x['d'][0] in stock_exchange_shares, _dict['data']))
+
+get_api()
+

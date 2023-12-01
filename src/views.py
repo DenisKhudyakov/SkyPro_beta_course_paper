@@ -1,5 +1,4 @@
 import os
-
 import pandas as pd
 from pathlib import Path
 from data.config import PATH_XLS_FILE_WITH_OPERATION
@@ -67,5 +66,4 @@ def currency_rates(currencies: list) -> dict:
             info = {"currency": currency, "rate": round(cbr_data, 2)}
             rates_info.append(info)
         return rates_info
-
 

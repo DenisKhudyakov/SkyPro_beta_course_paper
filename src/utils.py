@@ -23,7 +23,7 @@ def last_digits(card_number: str) -> str:
     return card_number[-4:]
 
 
-def filter_operation(date_: str, generator_obj: Any) -> list[Any]:
+def filter_operation(generator_obj: Any, date_: str = None) -> list[Any]:
     """
     Функция генератор, фильтрующая данные операции от начала месяца до указанной даты
     :param date_: указанная дата
@@ -80,3 +80,7 @@ def get_cash_back_and_expenses(generator_obj: Any) -> list[dict]:
         info = {"last_digits": last_digits(card), "total_spent": spending, "cashback": cashback}
         card_info.append(info)
     return card_info
+
+
+for i in read_xls_file(PATH_XLS_FILE_WITH_OPERATION):
+    print(i['Описание'])

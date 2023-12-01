@@ -48,4 +48,24 @@ def top_five_transactions(generator_obj: Any) -> list:
     """
     return list(sorted(generator_obj, key=lambda x: x['Сумма платежа'], reverse=True))[:5]
 
+def get_cash_back_and_expenses(generator_obj: Any) -> dict:
+    """
+    Функция анализирующая расходы пользователя карты
+    :param generator_obj: банковские данные
+    :return: отструктурированный словарь с данными
+    """
+    card_info = []
+    bank_data = tuple(generator_obj)
+    cards = tuple(set([i["Номер карты"] for i in bank_data if str(i["Номер карты"]) != "nan"]))
+    for card in cards:
+        spending = -sum([i["Сумма операции"] for i in bank_data if i["Сумма операции"] < 0 and i["Номер карты"] == card])
+        cashback = sum([i["Кэшбэк"] for i in bank_data if str(i["Кэшбэк"] != "nan") and i["Номер карты"] == card])
+        info = {"last_digits": last_digits(card), "total_spent": spending, "cashback": cashback}
+        card_info.append(info)
+    return card_info
+
+
+print(get_cash_back_and_expenses(read_xls_file(PATH_XLS_FILE_WITH_OPERATION)))
+# print(next(read_xls_file(PATH_XLS_FILE_WITH_OPERATION)))
+# print(-sum([i['Сумма операции'] for i in read_xls_file(PATH_XLS_FILE_WITH_OPERATION) if i["Сумма операции"] < 0 and i["Номер карты"] == '*5441']))
 

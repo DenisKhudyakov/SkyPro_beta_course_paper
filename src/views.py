@@ -67,3 +67,12 @@ def currency_rates(currencies: list) -> dict:
             rates_info.append(info)
         return rates_info
 
+def get_exel(any_path: str) -> Any:
+    """Загрузка данных из эксель файла"""
+    try:
+        if str(any_path).endswith('.xls'):
+            return pd.read_excel(any_path, index_col=0)
+        else:
+            raise ValueError('Файл не найден')
+    except ValueError as e:
+        print(e)

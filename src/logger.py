@@ -10,4 +10,3 @@ def setup_logger(name: str) -> Any:
         filename=PATH_LOGS, filemode="w+", level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     return logging.getLogger(name)
-print('+')

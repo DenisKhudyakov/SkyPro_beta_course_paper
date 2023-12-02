@@ -4,6 +4,9 @@ from src.views import read_xls_file
 from data.config import PATH_XLS_FILE_WITH_OPERATION
 from typing import Any
 from datetime import datetime
+from src.logger import setup_logger
+
+logger = setup_logger('services')
 
 def search_phone_number(generator_obj: Any) -> str:
     """
@@ -23,6 +26,7 @@ def search_phone_number(generator_obj: Any) -> str:
                     }
         list_.append(info)
     transactions_data = json.dumps(list_, ensure_ascii=False, indent=4)
+    logger.debug('Сформирована структура данных, где есть номер телефона')
     return transactions_data
 
 if __name__ == '__main__':

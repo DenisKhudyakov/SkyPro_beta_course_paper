@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import Any
 from src.views import read_xls_file
 from data.config import PATH_XLS_FILE_WITH_OPERATION
-
+from src.logger import setup_logger
+logger = setup_logger('utils')
 
 def greeting() -> str:
     """
@@ -11,6 +12,7 @@ def greeting() -> str:
     """
     time_list = ['Доброе утро', 'Добрый день', 'Добрый вечер']
     current_time = datetime.now().time().hour
+    logger.debug('Выполняется функция приветствия')
     return time_list[0] if current_time < 12 else time_list[1] if current_time < 18 else time_list[2]
 
 
@@ -20,6 +22,7 @@ def last_digits(card_number: str) -> str:
     :param card_number:
     :return: последние 4 цифры карты
     """
+    logger.debug('Выполняется функция преобразования номера карты')
     return card_number[-4:]
 
 
@@ -41,6 +44,7 @@ def filter_operation(generator_obj: Any, date_: str = None) -> list[Any]:
     for i in generator_obj:
         try:
             if in_the_range(i):
+                logger.debug('Операция отфильтрована')
                 yield i
         except TypeError:
             continue
@@ -61,6 +65,7 @@ def top_five_transactions(generator_obj: Any) -> list:
                 "category": i["Категория"],
                 "description": i["Описание"]}
         transactions.append(info)
+        logger.debug('Список наибольших транзакций сформирован')
     return transactions
 
 
@@ -79,8 +84,6 @@ def get_cash_back_and_expenses(generator_obj: Any) -> list[dict]:
         cashback = sum([i["Кэшбэк"] for i in bank_data if str(i["Кэшбэк"] != "nan") and i["Номер карты"] == card])
         info = {"last_digits": last_digits(card), "total_spent": spending, "cashback": cashback}
         card_info.append(info)
+        logger.debug('Получен список всех трат и кэшбэка по указанной карте')
     return card_info
 
-
-for i in read_xls_file(PATH_XLS_FILE_WITH_OPERATION):
-    print(i['Описание'])

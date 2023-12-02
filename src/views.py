@@ -1,14 +1,12 @@
 import os
 import pandas as pd
 from pathlib import Path
-from data.config import PATH_XLS_FILE_WITH_OPERATION
 from typing import Any
-from datetime import datetime
 import requests
-import re
-import json
 from dotenv import load_dotenv, find_dotenv
+from src.logger import setup_logger
 
+logger = setup_logger('views')
 
 def read_xls_file(any_path: Path) -> dict:
     """
@@ -18,14 +16,15 @@ def read_xls_file(any_path: Path) -> dict:
     """
     operation_data = pd.read_excel(any_path, index_col=0)
     for i in operation_data.iterrows():
+        logger.debug('Выводим словарь с данными по транзакциям')
         yield i[1].to_dict()
 
 
-
-def get_stock_data():
+def get_stock_data() -> list:
     """Функция, которая получает стоимость акции, по названию акции"""
     stock_exchange_shares = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
     if not find_dotenv():
+        logger.error('Нет .env файла, завершаем программу')
         exit('Переменные окружения не загружены, т.к. отсутствует файл .env')
     else:
         load_dotenv()
@@ -34,25 +33,28 @@ def get_stock_data():
     try:
         for stock in stock_exchange_shares:
             url = f"https://finnhub.io/api/v1/quote?symbol={stock}&token={API_KEY}"
-            response = requests.get(url)
-            response.raise_for_status()
-            response_data = response.json()
-            stock_price = response_data["c"]
-            info = {"stock": stock,
-                    "price": stock_price
-            }
-            stocks_info.append(info)
+            if url is not None:
+                response = requests.get(url)
+                response.raise_for_status()
+                response_data = response.json()
+                stock_price = response_data["c"]
+                info = {"stock": stock,
+                        "price": stock_price
+                }
+                stocks_info.append(info)
+        logger.debug('Функция отработала')
         return stocks_info
     except (requests.exceptions.HTTPError, ValueError, KeyError) as e:
-            print(e)
+            logger.error(f'Ошибка {e}')
 
-def currency_rates(currencies: list) -> dict:
+def currency_rates(currencies: list) -> list:
     """
     Функция отправляет запрос на сайт ЦБ РФ и получает курс валют в формате JSON
     :param url: строка с адресом
     :return: ничего не возвращаем
     """
     if not find_dotenv():
+        logger.error('нет .env файла завершаем программу')
         exit('Переменные окружения не загружены, т.к. отсутствует файл .env')
     else:
         load_dotenv()
@@ -65,6 +67,7 @@ def currency_rates(currencies: list) -> dict:
             cbr_data = data_dict["Valute"][currency]["Value"]
             info = {"currency": currency, "rate": round(cbr_data, 2)}
             rates_info.append(info)
+        logger.debug('Функция отработала')
         return rates_info
 
 def get_exel(any_path: str) -> Any:
@@ -73,6 +76,9 @@ def get_exel(any_path: str) -> Any:
         if str(any_path).endswith('.xls'):
             return pd.read_excel(any_path, index_col=0)
         else:
+            logger.error('Эксель файл не найден')
             raise ValueError('Файл не найден')
     except ValueError as e:
-        print(e)
+        logger.error(f'Ошибка {e}')
+
+

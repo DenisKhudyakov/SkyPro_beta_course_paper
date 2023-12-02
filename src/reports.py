@@ -4,7 +4,9 @@ import functools
 from datetime import datetime, timedelta
 from src.views import get_exel
 from data.config import PATH_XLS_FILE_WITH_OPERATION, PATH_XLS_FILE_WITH_REPORTS
-
+from src.logger import setup_logger
+import json
+logger = setup_logger("reports")
 def report(*, filename: str = PATH_XLS_FILE_WITH_REPORTS) -> Callable:
     """Записывает в файл результат, который возвращает функция, формирующая отчет"""
     def wrapper(func: Callable) -> Callable:
@@ -14,16 +16,16 @@ def report(*, filename: str = PATH_XLS_FILE_WITH_REPORTS) -> Callable:
                 result = func(*args, **kwargs)
                 with open(filename, 'w', encoding='UTF-8'):
                     result.to_excel(filename, index=False)
-                    print(f"Данные записаны в файл {filename}")
+                    logger.debug(f"Данные записаны в файл {filename}")
             except Exception as e:
-                print(e)
+                logger.error(e)
             return result
         return inner
     return wrapper
 
 @report()
 def spending_by_category(transactions: pd.DataFrame,
-                         category: str =None,
+                         category: str,
                          date: Optional[str] = None) -> pd.DataFrame:
     """Функция, фильтрующая данные по дате и по категориям"""
     if not date:
@@ -36,6 +38,10 @@ def spending_by_category(transactions: pd.DataFrame,
     transactions["Дата платежа"] = pd.to_datetime(transactions["Дата платежа"], dayfirst=True)
     filtered_df = transactions[(transactions['Дата платежа'] <= end_date_formatted) & (transactions['Дата платежа'] >= start_date_formatted)]
     filtered_df_with_category = filtered_df[(filtered_df["Категория"] == category)]
+    logger.debug('Отфильтрованы данные по операциям')
     return filtered_df_with_category
 
-print(spending_by_category(get_exel(PATH_XLS_FILE_WITH_OPERATION), category='Переводы', date='25.11.2019'))
+if __name__ == '__main__':
+    with open('test.json', 'w', encoding='UTF-8') as f:
+        json_object = spending_by_category(get_exel(PATH_XLS_FILE_WITH_OPERATION), category='Переводы', date='25.11.2019').to_dict(orient='records')
+        print(json_object)

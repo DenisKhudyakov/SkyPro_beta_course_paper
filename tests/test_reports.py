@@ -1,4 +1,5 @@
 import os.path
+import pathlib
 from typing import Any
 from unittest.mock import patch
 
@@ -11,11 +12,11 @@ from src.views import get_exel
 
 
 @pytest.fixture()
-def bank_data() -> pd.DataFrame:
-    return get_exel(PATH_XLS_FILE_WITH_OPERATION)
+def bank_data() -> Any:
+    return get_exel(str(PATH_XLS_FILE_WITH_OPERATION))
 
 
-def test_spending_by_category(bank_data: pd.DataFrame) -> None:
+def test_spending_by_category(bank_data: Any) -> None:
     result = spending_by_category(bank_data, category="Переводы", date="25.11.2019").to_dict(orient="records")
     assert len([i["Категория"] for i in result]) == 27
     result = spending_by_category(bank_data, category="Переводы").to_dict(orient="records")

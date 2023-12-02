@@ -1,9 +1,11 @@
 import functools
 import json
+import pathlib
 from datetime import datetime, timedelta
 from typing import Any, Callable, Optional
 
 import pandas as pd
+from pandas import Series
 
 from data.config import PATH_XLS_FILE_WITH_OPERATION, PATH_XLS_FILE_WITH_REPORTS
 from src.logger import setup_logger
@@ -12,7 +14,7 @@ from src.views import get_exel
 logger = setup_logger("reports")
 
 
-def report(*, filename: str = PATH_XLS_FILE_WITH_REPORTS) -> Callable:
+def report(*, filename: pathlib.Path = PATH_XLS_FILE_WITH_REPORTS) -> Callable:
     """Записывает в файл результат, который возвращает функция, формирующая отчет"""
 
     def wrapper(func: Callable) -> Callable:
@@ -52,13 +54,6 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
 
 
 @report()
-def func():
+def func() -> bool:
+    """Функция для теста декоратора"""
     return True
-
-
-if __name__ == "__main__":
-    with open("test.json", "w", encoding="UTF-8") as f:
-        json_object = spending_by_category(
-            get_exel(PATH_XLS_FILE_WITH_OPERATION), category="Переводы", date="25.11.2019"
-        ).to_dict(orient="records")
-        print(json_object)

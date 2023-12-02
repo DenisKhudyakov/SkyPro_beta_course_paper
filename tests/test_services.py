@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import pytest
 
@@ -6,7 +7,7 @@ from src.services import search_phone_number
 
 
 @pytest.fixture
-def bank_data():
+def bank_data() -> list:
     return [
         {
             "Дата платежа": "19.11.2021",
@@ -91,7 +92,7 @@ def bank_data():
     ]
 
 
-def test_search_phone_number(bank_data):
+def test_search_phone_number(bank_data: Any) -> None:
     assert search_phone_number(bank_data).__eq__(
         [
             {

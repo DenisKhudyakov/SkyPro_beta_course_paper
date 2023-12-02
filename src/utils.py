@@ -30,7 +30,7 @@ def last_digits(card_number: str) -> str:
     return card_number[-4:]
 
 
-def filter_operation(generator_obj: Any, date_: str = None) -> list[Any]:
+def filter_operation(generator_obj: Any, date_: str) -> Any:
     """
     Функция генератор, фильтрующая данные операции от начала месяца до указанной даты
     :param date_: указанная дата

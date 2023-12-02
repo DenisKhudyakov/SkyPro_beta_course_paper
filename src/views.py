@@ -1,4 +1,5 @@
 import os
+import pathlib
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +13,7 @@ from src.logger import setup_logger
 logger = setup_logger("views")
 
 
-def read_xls_file(any_path: Path) -> dict:
+def read_xls_file(any_path: Path) -> Any:
     """
     Генератор чтения таблицы
     :param any_path: Путь до эксель таблицы
@@ -51,7 +52,7 @@ def get_stock_data(stock_exchange_shares: list) -> list:
         raise ValueError("Что-то пошло не так")
 
 
-def currency_rates(currencies: list) -> list:
+def currency_rates(currencies: list) -> Any:
     """
     Функция отправляет запрос на сайт ЦБ РФ и получает курс валют в формате JSON
     :param url: строка с адресом

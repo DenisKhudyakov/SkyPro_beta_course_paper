@@ -41,6 +41,10 @@ def spending_by_category(transactions: pd.DataFrame,
     logger.debug('Отфильтрованы данные по операциям')
     return filtered_df_with_category
 
+@report()
+def func():
+    return True
+
 if __name__ == '__main__':
     with open('test.json', 'w', encoding='UTF-8') as f:
         json_object = spending_by_category(get_exel(PATH_XLS_FILE_WITH_OPERATION), category='Переводы', date='25.11.2019').to_dict(orient='records')

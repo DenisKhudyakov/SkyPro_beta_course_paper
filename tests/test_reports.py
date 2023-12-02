@@ -1,12 +1,13 @@
 import os.path
-
-import pytest
-from src.views import get_exel
-from data.config import PATH_XLS_FILE_WITH_OPERATION, PATH_XLS_FILE_WITH_REPORTS
-import pandas as pd
-from src.reports import spending_by_category, func
-from unittest.mock import patch
 from typing import Any
+from unittest.mock import patch
+
+import pandas as pd
+import pytest
+
+from data.config import PATH_XLS_FILE_WITH_OPERATION, PATH_XLS_FILE_WITH_REPORTS
+from src.reports import func, spending_by_category
+from src.views import get_exel
 
 
 @pytest.fixture()

@@ -92,11 +92,13 @@ def bank_data():
 
 
 def test_search_phone_number(bank_data):
-    assert search_phone_number(bank_data).__eq__([
-    {
-        "date": "19.11.2021",
-        "amount": -200.0,
-        "category": "Мобильная связь",
-        "description": "Тинькофф Мобайл +7 995 555-55-55"
-    }
-])
+    assert search_phone_number(bank_data).__eq__(
+        [
+            {
+                "date": "19.11.2021",
+                "amount": -200.0,
+                "category": "Мобильная связь",
+                "description": "Тинькофф Мобайл +7 995 555-55-55",
+            }
+        ]
+    )

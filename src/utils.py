@@ -1,8 +1,10 @@
+import json
 from datetime import datetime
 from typing import Any
-from src.views import read_xls_file
-from data.config import PATH_XLS_FILE_WITH_OPERATION
+
+from data.config import PATH_XLS_FILE_WITH_OPERATION, USER_SETTINGS
 from src.logger import setup_logger
+from src.views import currency_rates, get_stock_data, read_xls_file
 
 logger = setup_logger("utils")
 
@@ -86,7 +88,20 @@ def get_cash_back_and_expenses(generator_obj: Any) -> list[dict]:
     return card_info
 
 
-if __name__ == '__main__':
-    print(next(filter_operation(read_xls_file(PATH_XLS_FILE_WITH_OPERATION), '31.12.2021')))
-    print(list(top_five_transactions(filter_operation(read_xls_file(PATH_XLS_FILE_WITH_OPERATION), '31.12.2021'))))
-    print(next(read_xls_file(PATH_XLS_FILE_WITH_OPERATION)))
+def main_struct(generator_obj: Any, settings: dict) -> str:
+    tuple_ = tuple(generator_obj)
+    greet = greeting()
+    cards = get_cash_back_and_expenses(tuple_)
+    top_transactions = top_five_transactions(tuple_)
+    currency_rate = currency_rates(settings["user_currencies"])
+    stock_prices = get_stock_data(settings["user_stocks"])
+    dict_ = {
+        "greeting": greet,
+        "cards": cards,
+        "top_transactions": top_transactions,
+        "currency_rates": currency_rate,
+        "stock_prices": stock_prices,
+    }
+    json_struct = json.dumps(dict_, ensure_ascii=False, indent=4)
+    logger.debug("Итоговый результат получен")
+    return json_struct

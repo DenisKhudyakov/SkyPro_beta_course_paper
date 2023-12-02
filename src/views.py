@@ -1,11 +1,13 @@
 import os
-import pandas as pd
 from pathlib import Path
 from typing import Any
+
+import pandas as pd
 import requests
-from dotenv import load_dotenv, find_dotenv
-from src.logger import setup_logger
+from dotenv import find_dotenv, load_dotenv
+
 from data.config import PATH_XLS_FILE_WITH_OPERATION
+from src.logger import setup_logger
 
 logger = setup_logger("views")
 
@@ -48,6 +50,7 @@ def get_stock_data(stock_exchange_shares: list) -> list:
         logger.error(f"Ошибка {e}")
         raise ValueError("Что-то пошло не так")
 
+
 def currency_rates(currencies: list) -> list:
     """
     Функция отправляет запрос на сайт ЦБ РФ и получает курс валют в формате JSON
@@ -63,7 +66,6 @@ def currency_rates(currencies: list) -> list:
     if url_api is not None:
         response = requests.get(url_api)
         data_dict = response.json()
-        print(data_dict)
         rates_info = []
         for currency in currencies:
             cbr_data = data_dict["Valute"][currency]["Value"]
@@ -84,8 +86,3 @@ def get_exel(any_path: str) -> Any:
     except ValueError as e:
         logger.error(f"Ошибка {e}")
         return "Файл не найден"
-
-if __name__ == '__main__':
-    # print(type(read_xls_file(PATH_XLS_FILE_WITH_OPERATION)))
-    # print(get_stock_data(["AAPL"]))
-    currency_rates(['USD'])

@@ -1,10 +1,11 @@
-import re
 import json
-from src.views import read_xls_file
-from data.config import PATH_XLS_FILE_WITH_OPERATION
-from typing import Any
+import re
 from datetime import datetime
+from typing import Any
+
+from data.config import PATH_XLS_FILE_WITH_OPERATION
 from src.logger import setup_logger
+from src.views import read_xls_file
 
 logger = setup_logger("services")
 

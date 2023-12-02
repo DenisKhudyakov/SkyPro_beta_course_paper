@@ -1,11 +1,13 @@
-import pandas as pd
-from typing import Any, Callable, Optional
 import functools
+import json
 from datetime import datetime, timedelta
-from src.views import get_exel
+from typing import Any, Callable, Optional
+
+import pandas as pd
+
 from data.config import PATH_XLS_FILE_WITH_OPERATION, PATH_XLS_FILE_WITH_REPORTS
 from src.logger import setup_logger
-import json
+from src.views import get_exel
 
 logger = setup_logger("reports")
 

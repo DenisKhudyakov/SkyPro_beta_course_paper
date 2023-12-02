@@ -15,6 +15,7 @@ xlrd = "^2.0.1"
 selenium = "^4.15.2"
 pandas-stubs = "^2.1.1.230928"
 types-requests = "^2.31.0.10"
+pytest-cov = "^4.1.0"
 
 [tool.poetry.group.lint.dependencies]
 black = "^23.11.0"
